@@ -17,7 +17,7 @@
  *
  * @package JSObject
  */
-class JSObject {
+class JSObject extends ArrayObject {
 
 	/**
 	 * Create the object
@@ -26,18 +26,22 @@ class JSObject {
 	 */
 	public function __construct($params = [])
 	{
+		parent::__construct($params, ArrayObject::ARRAY_AS_PROPS);
+	
 		foreach($params as $name => &$val)
 		{
 			// Bind '$this' for closures
 			if ($val instanceof Closure)
 			{
-				$val->bindTo($this);
+				$val = $val->bindTo($this);
 			}
-		
+				
 			// Add the parameter to the object
 			$this->$name = $val;
 		}
 	}
+	
+	// --------------------------------------------------------------------------
 	
 	/**
 	 * Magic method to invoke appended closures
@@ -48,31 +52,20 @@ class JSObject {
 	 */
 	public function __call($name, $params = [])
 	{
+		// Allow array operations on the object
+		if (substr($name, 0, 6) === 'array_' && is_callable($name))
+		{
+			$args = array_merge($this->getArrayCopy(), $params);
+			return call_user_func_array($name, [$args]);
+		}
+	
+		// Call closures attached to the object
 		if (is_callable($this->$name))
 		{
 			return call_user_func_array($this->$name, $params);
 		}
 		
 		return NULL;
-	}
-	
-	/**
-	 * Treat invokation of the object as creating a new object
-	 *
-	 * @param mixed
-	 * @return JSObject
-	 */
-	public function __invoke($params = [])
-	{
-		$class = __CLASS__;
-		
-		// Create the new object
-		$obj = new $class();
-		
-		// Pass the parameters to the constructor of the new object
-		$obj = call_user_func_array([$obj, '__construct'], $params);
-		
-		return $obj;		
 	}
 }
 
