@@ -15,6 +15,8 @@ require_once('simpletest/autorun.php');
 // Include JSObject
 require_once('JSObject.php');
 
+
+
 class JSObjectTests extends UnitTestCase {
 
 	function TestIsA() 
@@ -41,6 +43,22 @@ class JSObjectTests extends UnitTestCase {
 		$this->assertEqual($obj->x(), 50);
 	}
 	
+	// List of blacklisted array functions
+/*
+			'array_change_key_case',
+			'array_count_values',
+			'array_combine',
+			'array_fill_keys',
+			'array_fill',
+			'array_key_exists',
+			'array_map',
+			'array_merge',
+			'array_merge_recursive',
+			'array_search',
+			'array_unshift',
+*/
+
+	
 	function TestArrayFlip()
 	{
 		$obj = new JSObject([
@@ -59,6 +77,16 @@ class JSObjectTests extends UnitTestCase {
 		]);
 		
 		$this->assertEqual($obj->array_keys(), ['x','y']);
+	}
+	
+	function TestArrayValues()
+	{
+		$obj = new JSObject([
+			'x' => 'foo',
+			'y' => 'bar'
+		]);
+		
+		$this->assertEqual($obj->array_values(), ['foo','bar']);
 	}
 
 }

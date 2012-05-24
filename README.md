@@ -3,9 +3,25 @@ JSObject
 
 A PHP 5.4 class to emulate Javascript object literals.
 
-Also, can use ``array_`` functions to operate on the object's properties and values. (Only works for functions that start with ``array_`` and have the array as the first parameter)
+Also, can use ``array_`` functions to operate on the object's properties and values. (Only works for functions that start with ``array_`` and have the array as the first parameter.)
 
-Examples:
+The following array functions are blacklisted because of their parameter ordering, or unpredictable behavior:
+
+	* array_change_key_case
+	* array_count_values
+	* array_combine
+	* array_fill_keys
+	* array_fill
+	* array_key_exists
+	* array_map
+	* array_merge
+	* array_merge_recursive
+	* array_search
+	* array_unshift
+
+
+
+##Examples:
 
 * Basic Usage
 

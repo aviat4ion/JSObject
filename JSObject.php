@@ -30,6 +30,8 @@ class JSObject extends ArrayObject {
 	
 		foreach($params as $name => &$val)
 		{
+			if (empty($val)) continue;
+		
 			// Bind '$this' for closures
 			if ($val instanceof Closure)
 			{
@@ -52,11 +54,34 @@ class JSObject extends ArrayObject {
 	 */
 	public function __call($name, $params = [])
 	{
+		$function_blacklist = [
+			'array_change_key_case',
+			'array_combine',
+			'array_count_values',
+			'array_fill_keys',
+			'array_fill',
+			'array_key_exists',
+			'array_map',
+			'array_merge',
+			'array_merge_recursive',
+			'array_search',
+			'array_unshift',
+		];
+	
 		// Allow array operations on the object
-		if (substr($name, 0, 6) === 'array_' && is_callable($name))
+		if (substr($name, 0, 6) === 'array_' && is_callable($name) && ! in_array($name, $function_blacklist))
 		{
-			$args = array_merge($this->getArrayCopy(), $params);
-			return call_user_func_array($name, [$args]);
+			$args = ( ! empty($params)) 
+				? array_merge($this->getArrayCopy(), $params)
+				: $this->getArrayCopy();
+			
+			// Make sure the array items in the array parameter aren't used as function parameters
+			if (count($args === 1))
+			{
+				$args = [$args];
+			}
+			
+			return call_user_func_array($name, $args);
 		}
 	
 		// Call closures attached to the object
