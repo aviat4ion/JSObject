@@ -28,7 +28,7 @@ class JSObject extends ArrayObject {
 	{
 		parent::__construct($params, ArrayObject::ARRAY_AS_PROPS);
 	
-		foreach($params as $name => &$val)
+		foreach($params as $name => $val)
 		{
 			if (empty($val)) continue;
 		
