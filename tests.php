@@ -88,5 +88,34 @@ class JSObjectTests extends UnitTestCase {
 		
 		$this->assertEqual($obj->array_values(), ['foo','bar']);
 	}
+	
+	function TestJSObjectFunc()
+	{
+		$obj1 = new JSObject([
+			'x' => 'foo',
+			'y' => 'bar'
+		]);
+		
+		$obj2 = JSObject([
+			'x' => 'foo',
+			'y' => 'bar'
+		]);
+		
+		$this->assertEqual($obj1, $obj2);
+	}
+	
+	function TestFuncClosure()
+	{
+		$obj = JSObject([
+			'a' => 10,
+			'b' => 5,
+			'c' => 0,
+			'x' => function() {
+				return $this->a * $this->b;
+			}
+		]);
+		
+		$this->assertEqual($obj->x(), 50);
+	}
 
 }

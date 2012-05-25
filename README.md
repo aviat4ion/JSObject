@@ -36,6 +36,19 @@ The following array functions are blacklisted because of their parameter orderin
 		
 		$obj->x(); // Returns 50
 		
+	or, with the helper function:
+	
+		$obj = JSObject([
+			'a' => 10,
+			'b' => 5,
+			'c' => 0,
+			'x' => function() {
+				return $this->a * $this->b;
+			}
+		]);
+		
+		$obj->x(); // Returns 50
+		
 * Get an array of the properties of the object:
 
 		$obj = new JSObject([

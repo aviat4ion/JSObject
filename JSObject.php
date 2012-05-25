@@ -11,6 +11,26 @@
  */
  
 // --------------------------------------------------------------------------
+// ! Shortcut Function
+// --------------------------------------------------------------------------
+
+/**
+ * Returns an instance of a JSObject instantiated with the passed parameters
+ *
+ * @param mixed
+ * @return JSObject
+ */
+function JSObject()
+{
+	// Create the object
+	$obj = new JSObject();
+	
+	// Set the parameters
+	call_user_func_array([$obj, '__construct'], func_get_args());
+	return $obj;
+}
+
+// -------------------------------------------------------------------------
 
 /**
  * JSObject class
